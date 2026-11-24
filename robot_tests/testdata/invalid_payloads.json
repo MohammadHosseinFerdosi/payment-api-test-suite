@@ -1,0 +1,27 @@
+{
+  "missing_field": {
+    "options": [
+      {
+        "type": "card",
+        "title": "Credit Card",
+        "is_clickable": true,
+        "is_active": true,
+        "credit": 100,
+        "is_default": true
+      }
+    ]
+  },
+  "wrong_type": {
+    "options": [
+      {
+        "type": "card",
+        "title": "Credit Card",
+        "is_clickable": "yes",
+        "is_active": true,
+        "credit": "100",
+        "is_default": true,
+        "price_type": "fixed"
+      }
+    ]
+  }
+}

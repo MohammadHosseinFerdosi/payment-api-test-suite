@@ -1,0 +1,37 @@
+{
+  "happy": {
+    "options": [
+      {
+        "type": "card",
+        "title": "Credit Card",
+        "is_clickable": true,
+        "is_active": true,
+        "credit": 100,
+        "is_default": true,
+        "price_type": "fixed"
+      },
+      {
+        "type": "wallet",
+        "title": "Wallet",
+        "is_clickable": true,
+        "is_active": true,
+        "credit": 50,
+        "is_default": false,
+        "price_type": "dynamic"
+      }
+    ]
+  },
+  "blocked": {
+    "options": [
+      {
+        "type": "bnpl",
+        "title": "Buy Now Pay Later",
+        "is_clickable": false,
+        "is_active": true,
+        "credit": 100,
+        "is_default": false,
+        "price_type": "fixed"
+      }
+    ]
+  }
+}

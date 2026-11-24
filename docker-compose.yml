@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    container_name: payment-mock-app
+    ports:
+      - "8000:8000"
+    environment:
+      PAYMENT_API_BASE_URL: http://app:8000
+      PAYMENT_MOCK_SCENARIO: happy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: python -m uvicorn mock_server.app:app --host 0.0.0.0 --port 8000
+
+  tests:
+    build: .
+    container_name: payment-tests
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      PAYMENT_API_BASE_URL: http://app:8000
+    command: sh -c "python -m pytest -q mock_server/tests && robot --outputdir /tmp/reports robot_tests/payment_suite.robot"
+
+  load:
+    build: .
+    container_name: payment-load
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      PAYMENT_API_BASE_URL: http://app:8000
+    command: sh -c "apt-get update && apt-get install -y wget unzip && wget -q https://github.com/grafana/k6/releases/download/v0.49.0/k6-v0.49.0-linux-amd64.tar.gz -O /tmp/k6.tgz && tar -xzf /tmp/k6.tgz -C /tmp && /tmp/k6-v0.49.0-linux-amd64/k6 run /app/load_tests/scenarios/happy_path.js"

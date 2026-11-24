@@ -1,0 +1,85 @@
+openapi: 3.0.3
+info:
+  title: Checkout Payment Mock API
+  version: 1.0.0
+paths:
+  /payment/:
+    post:
+      summary: Submit payment options
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentPayload'
+            examples:
+              happy:
+                value:
+                  options:
+                    - type: card
+                      title: Credit Card
+                      is_clickable: true
+                      is_active: true
+                      credit: 100
+                      is_default: true
+                      price_type: fixed
+              blocked:
+                value:
+                  options:
+                    - type: bnpl
+                      title: Buy Now Pay Later
+                      is_clickable: false
+                      is_active: true
+                      credit: 100
+                      is_default: false
+                      price_type: fixed
+      responses:
+        '200':
+          description: Payment options processed
+        '400':
+          description: Validation error
+        '500':
+          description: Server error
+  /validate/:
+    post:
+      summary: Validate payload structure
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentPayload'
+      responses:
+        '200':
+          description: Valid payload
+        '400':
+          description: Invalid payload
+components:
+  schemas:
+    PaymentPayload:
+      type: object
+      required: [options]
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOption'
+    PaymentOption:
+      type: object
+      required: [type, title, is_clickable, is_active, credit, is_default, price_type]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        is_clickable:
+          type: boolean
+        is_active:
+          type: boolean
+        credit:
+          type: integer
+        is_default:
+          type: boolean
+        price_type:
+          type: string
+          enum: [fixed, dynamic]
