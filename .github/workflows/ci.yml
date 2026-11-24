@@ -30,9 +30,7 @@ jobs:
         run: |
           pytest -q mock_server/tests
       - name: Install k6
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y k6
+        uses: grafana/setup-k6-action@v1
       - name: Run k6 load tests
         run: |
           k6 run load_tests/scenarios/happy_path.js || true
